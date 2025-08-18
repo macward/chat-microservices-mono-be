@@ -1,0 +1,21 @@
+# Core dependencies
+fastapi==0.116.1
+pydantic==2.11.7
+pydantic-settings==2.10.1
+uvicorn[standard]==0.35.0
+
+# Additional FastAPI dependencies
+python-multipart==0.0.19
+
+# Configuration and environment
+python-dotenv==1.0.1
+
+# HTTP and async support
+aiofiles==24.1.0
+httpx==0.28.1
+
+# Production dependencies
+starlette==0.47.2
+
+# Local LM Studio client
+-e /Users/maxward/Developer/LLMS/Packages/lmstudio-python-client
