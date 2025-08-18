@@ -3,11 +3,11 @@
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from beanie import Document, Indexed
-from pydantic import Field, validator
+from pydantic import BaseModel, Field, validator
 import uuid
 
 
-class ContentData(dict):
+class ContentData(BaseModel):
     """Message content data."""
     text: str
     sanitized_text: Optional[str] = None
@@ -17,7 +17,7 @@ class ContentData(dict):
     character_count: Optional[int] = None
 
 
-class LLMMetadata(dict):
+class LLMMetadata(BaseModel):
     """LLM metadata for assistant messages."""
     provider: Optional[str] = None
     model: Optional[str] = None
@@ -27,7 +27,7 @@ class LLMMetadata(dict):
     processing_time_ms: Optional[int] = None
 
 
-class TokenUsage(dict):
+class TokenUsage(BaseModel):
     """Token usage information."""
     prompt_tokens: Optional[int] = None
     completion_tokens: Optional[int] = None
@@ -35,14 +35,14 @@ class TokenUsage(dict):
     estimated_cost: Optional[float] = None
 
 
-class SafetyMetadata(dict):
+class SafetyMetadata(BaseModel):
     """Content safety metadata."""
     content_filtered: bool = False
     safety_score: Optional[float] = None
-    detected_issues: List[str] = []
+    detected_issues: List[str] = Field(default_factory=list)
 
 
-class Timestamps(dict):
+class Timestamps(BaseModel):
     """Timestamp information."""
     created_at: datetime
     processed_at: Optional[datetime] = None
@@ -72,7 +72,7 @@ class Message(Document):
     token_usage: Optional[TokenUsage] = None
     
     # Safety and content filtering
-    safety_metadata: SafetyMetadata = Field(default_factory=dict)
+    safety_metadata: SafetyMetadata = Field(default_factory=SafetyMetadata)
     
     # Timestamps
     timestamps: Timestamps

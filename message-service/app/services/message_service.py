@@ -142,22 +142,22 @@ class MessageService:
             user_id=message.user_id,
             character_id=message.character_id,
             content={
-                'text': message.content.get('text', ''),
-                'sanitized_text': message.content.get('sanitized_text'),
-                'detected_language': message.content.get('detected_language'),
-                'word_count': message.content.get('word_count'),
-                'character_count': message.content.get('character_count')
+                'text': message.content.text,
+                'sanitized_text': message.content.sanitized_text,
+                'detected_language': message.content.detected_language,
+                'word_count': message.content.word_count,
+                'character_count': message.content.character_count
             },
             role=MessageRole(message.role),
             message_type=message.message_type,
             status=MessageStatus(message.status),
             timestamps={
-                'created_at': message.timestamps.get('created_at'),
-                'processed_at': message.timestamps.get('processed_at'),
-                'updated_at': message.timestamps.get('updated_at')
+                'created_at': message.timestamps.created_at,
+                'processed_at': message.timestamps.processed_at,
+                'updated_at': message.timestamps.updated_at
             },
-            llm_metadata=message.llm_metadata,
-            token_usage=message.token_usage,
-            safety_metadata=message.safety_metadata,
+            llm_metadata=message.llm_metadata.model_dump() if message.llm_metadata else None,
+            token_usage=message.token_usage.model_dump() if message.token_usage else None,
+            safety_metadata=message.safety_metadata.model_dump() if message.safety_metadata else None,
             custom_metadata=message.custom_metadata
         )
