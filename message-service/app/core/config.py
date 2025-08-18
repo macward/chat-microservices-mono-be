@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     
     # Service Configuration
     service_name: str = Field(default="message-service", env="SERVICE_NAME")
-    port: int = Field(default=8004, env="PORT")
+    port: int = Field(default=8009, env="PORT")
     log_level: str = Field(default="INFO", env="LOG_LEVEL")
     environment: str = Field(default="development", env="ENVIRONMENT")
     debug: bool = Field(default=True, env="DEBUG")

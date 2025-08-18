@@ -130,7 +130,7 @@ async def get_conversation_messages(
     conversation_id: str = Path(..., description="Conversation ID"),
     limit: int = Query(50, ge=1, le=1000, description="Number of messages to return"),
     cursor: str = Query(None, description="Pagination cursor"),
-    role: str = Query(None, regex="^(user|assistant|system)$", description="Filter by message role"),
+    role: str = Query(None, pattern="^(user|assistant|system)$", description="Filter by message role"),
     include_archived: bool = Query(False, description="Include archived messages"),
     user_id: str = Header(alias="x-user-id", default=None),
     authorization: str = Header(None)

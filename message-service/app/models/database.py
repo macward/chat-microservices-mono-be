@@ -62,9 +62,9 @@ class Message(Document):
     content: ContentData
     
     # Message metadata
-    role: str = Field(regex="^(user|assistant|system)$")
+    role: str = Field(pattern="^(user|assistant|system)$")
     message_type: str = Field(default="standard")
-    status: str = Field(default="active", regex="^(active|archived|flagged|deleted)$")
+    status: str = Field(default="active", pattern="^(active|archived|flagged|deleted)$")
     sequence_number: Optional[int] = None
     
     # LLM specific data (only for assistant messages)

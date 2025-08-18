@@ -122,12 +122,12 @@ class ConversationMessagesRequest(BaseModel):
     """Request model for getting conversation messages."""
     limit: int = Field(default=50, ge=1, le=1000)
     cursor: Optional[str] = None
-    direction: str = Field(default="next", regex="^(next|prev)$")
+    direction: str = Field(default="next", pattern="^(next|prev)$")
     role: Optional[MessageRole] = None
     start_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
     include_archived: bool = False
-    format: str = Field(default="full", regex="^(full|summary|llm)$")
+    format: str = Field(default="full", pattern="^(full|summary|llm)$")
 
 
 class PaginationInfo(BaseModel):
