@@ -88,15 +88,6 @@ class MessageService:
         
         return [self._to_response_model(msg) for msg in messages]
 
-    async def archive_message(self, message_id: str) -> MessageResponse:
-        """Archive a message."""
-        logger.info("Archiving message", message_id=message_id)
-        
-        message = await self.repository.archive_message(message_id)
-        if not message:
-            raise NotFoundError("Message", message_id)
-        
-        return self._to_response_model(message)
     
     
     def _sanitize_content(self, content: str) -> str:

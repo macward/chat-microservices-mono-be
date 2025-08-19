@@ -69,34 +69,3 @@ async def get_user_id_from_token(authorization: str = Header(None)) -> str:
 
 
 
-@router.delete("/messages/{message_id}", response_model=Dict[str, Any])
-async def archive_message(
-    message_id: str = Path(..., description="Message ID"),
-    reason: str = Query(None, description="Reason for archiving"),
-    user_id: str = Header(alias="x-user-id", default=None),
-    authorization: str = Header(None)
-):
-    """Archive a message (soft delete)."""
-    try:
-        if not user_id:
-            user_id = get_user_id_from_token(authorization)
-        
-        service = MessageService()
-        message = await service.archive_message(message_id)
-        
-        return {
-            "message_id": message_id,
-            "status": "archived",
-            "archived_at": message.timestamps.get('updated_at'),
-            "archive_reason": reason or "user_request",
-            "recoverable": True
-        }
-        
-    except NotFoundError as e:
-        raise HTTPException(status_code=404, detail={"error": {"code": e.code, "message": e.message}})
-    except Exception as e:
-        logger.error("Failed to archive message", message_id=message_id, error=str(e))
-        raise HTTPException(
-            status_code=500,
-            detail={"error": {"code": "INTERNAL_ERROR", "message": "Internal server error"}}
-        )

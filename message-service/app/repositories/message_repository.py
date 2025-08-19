@@ -46,17 +46,6 @@ class MessageRepository:
             logger.error("Failed to create message", error=str(e))
             raise DatabaseError("create_message", f"Failed to create message: {str(e)}")
 
-    async def get_message_by_id(self, message_id: str) -> Optional[Message]:
-        """Get a message by its ID."""
-        try:
-            message = await Message.find_one(Message.message_id == message_id)
-            if not message:
-                logger.warning("Message not found", message_id=message_id)
-            return message
-            
-        except Exception as e:
-            logger.error("Failed to get message", message_id=message_id, error=str(e))
-            raise DatabaseError("get_message", f"Failed to get message: {str(e)}")
 
     async def get_conversation_messages(
         self,
@@ -137,25 +126,6 @@ class MessageRepository:
             raise DatabaseError("count_messages", f"Failed to count messages: {str(e)}")
 
 
-    async def archive_message(self, message_id: str) -> Optional[Message]:
-        """Archive a message (soft delete)."""
-        try:
-            message = await self.get_message_by_id(message_id)
-            if not message:
-                raise NotFoundError("Message", message_id)
-            
-            message.status = MessageStatus.ARCHIVED.value
-            message.timestamps['updated_at'] = datetime.utcnow()
-            
-            await message.save()
-            logger.info("Message archived", message_id=message_id)
-            return message
-            
-        except NotFoundError:
-            raise
-        except Exception as e:
-            logger.error("Failed to archive message", message_id=message_id, error=str(e))
-            raise DatabaseError("archive_message", f"Failed to archive message: {str(e)}")
 
     async def get_user_messages(
         self,
