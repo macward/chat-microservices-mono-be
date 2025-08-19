@@ -10,8 +10,7 @@ from app.models.message import (
     CreateMessageRequest, 
     MessageResponse, 
     ConversationMessagesRequest,
-    MessageRole,
-    MessageStatus
+    MessageRole
 )
 from app.core.exceptions import ValidationError, NotFoundError, LLMError
 from app.core.logging import get_logger
@@ -256,28 +255,28 @@ class MessageService:
     
     def _to_response_model(self, message: Message) -> MessageResponse:
         """Convert database model to response model."""
+        # Extract basic content text
+        content_text = message.content.get('text', '') if isinstance(message.content, dict) else str(message.content)
+        
+        # Extract creation timestamp
+        created_at = message.timestamps.get('created_at') if isinstance(message.timestamps, dict) else message.timestamps.created_at
+        
+        # Extract LLM metadata if present
+        llm_metadata = None
+        if hasattr(message, 'llm_metadata') and message.llm_metadata:
+            if hasattr(message.llm_metadata, 'model_dump'):
+                llm_metadata = message.llm_metadata.model_dump()
+            else:
+                llm_metadata = message.llm_metadata
+        
         return MessageResponse(
             message_id=message.message_id,
             conversation_id=message.conversation_id,
             user_id=message.user_id,
             character_id=message.character_id,
-            content={
-                'text': message.content.text,
-                'sanitized_text': message.content.sanitized_text,
-                'detected_language': message.content.detected_language,
-                'word_count': message.content.word_count,
-                'character_count': message.content.character_count
-            },
+            content=content_text,
             role=MessageRole(message.role),
-            message_type=message.message_type,
-            status=MessageStatus(message.status),
-            timestamps={
-                'created_at': message.timestamps.created_at,
-                'processed_at': message.timestamps.processed_at,
-                'updated_at': message.timestamps.updated_at
-            },
-            llm_metadata=message.llm_metadata.model_dump() if message.llm_metadata else None,
-            token_usage=message.token_usage.model_dump() if message.token_usage else None,
-            safety_metadata=message.safety_metadata.model_dump() if message.safety_metadata else None,
-            custom_metadata=message.custom_metadata
+            created_at=created_at,
+            llm_metadata=llm_metadata,
+            custom_metadata=message.custom_metadata or {}
         )

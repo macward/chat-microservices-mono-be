@@ -38,9 +38,7 @@ class LLMProcessResponse(BaseModel):
     """Response from LLM processing."""
     user_message: MessageResponse
     assistant_message: Optional[MessageResponse] = None
-    processing_status: Dict[str, Any]
     error: Optional[Dict[str, Any]] = None
-    llm_metadata: Optional[Dict[str, Any]] = None
 
 
 class LLMHealthResponse(BaseModel):
@@ -135,26 +133,10 @@ async def process_message_with_llm(
             temperature=request.temperature
         )
         
-        # Prepare response
-        processing_status = {
-            "status": "completed" if result.get("assistant_message") else "failed",
-            "llm_service_healthy": True,
-            "processing_time": None
-        }
-        
-        # Add LLM metadata if available
-        llm_metadata = None
-        if result.get("assistant_message"):
-            llm_metadata = result["assistant_message"].llm_metadata
-            if llm_metadata:
-                processing_status["processing_time"] = llm_metadata.get("processing_time")
-        
         return LLMProcessResponse(
             user_message=result["user_message"],
             assistant_message=result.get("assistant_message"),
-            processing_status=processing_status,
-            error=result.get("error"),
-            llm_metadata=llm_metadata
+            error=result.get("error")
         )
         
     except RateLimitExceeded as e:

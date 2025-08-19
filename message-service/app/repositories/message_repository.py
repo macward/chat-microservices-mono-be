@@ -7,7 +7,7 @@ from beanie.odm.operators.find.comparison import In
 from pymongo import DESCENDING
 
 from app.models.database import Message
-from app.models.message import MessageRole, MessageStatus
+from app.models.message import MessageRole
 from app.core.exceptions import NotFoundError, DatabaseError
 from app.core.logging import get_logger
 
@@ -72,9 +72,7 @@ class MessageRepository:
             if end_date:
                 query = query & (Message.timestamps['created_at'] <= end_date)
             
-            # Add status filter
-            if not include_archived:
-                query = query & (Message.status == MessageStatus.ACTIVE.value)
+            # Add status filter - simplified since we removed status field
             
             # Execute query with pagination and sorting
             messages = await Message.find(query)\
@@ -111,8 +109,7 @@ class MessageRepository:
             if role:
                 query = query & (Message.role == role.value)
             
-            if not include_archived:
-                query = query & (Message.status == MessageStatus.ACTIVE.value)
+            # Add status filter - simplified since we removed status field
             
             count = await Message.find(query).count()
             return count
