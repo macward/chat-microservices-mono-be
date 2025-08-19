@@ -15,7 +15,7 @@ The system consists of 5 microservices, each running on different ports:
 | **user-service** | 8024 | PostgreSQL | JWT authentication, user management, credits system |
 | **character-service** | 8020 | PostgreSQL | Character CRUD operations, metadata management |
 | **conversation-service** | 8003 | MongoDB | Conversation management, session handling |
-| **message-service** | 8004 | MongoDB + Redis | Message processing, LLM integration, analytics |
+| **message-service** | 9 | MongoDB + Redis | Message processing, LLM integration, analytics |
 | **llm-service** | 8022 | N/A | LM Studio API wrapper, model interaction |
 
 ### Environment Setup

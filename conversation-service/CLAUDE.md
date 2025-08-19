@@ -85,7 +85,7 @@ The project follows an **MVP + Incremental Scaling** methodology:
 This microservice integrates with:
 - **Auth Service** (port 8001) - JWT token validation and user management
 - **Characters Service** (port 8002) - Character validation and metadata
-- **Message Service** (port 8004) - Message statistics and conversation metrics
+- **Message Service** (port 8009) - Message statistics and conversation metrics
 
 ### Database Schema
 Uses MongoDB with collections:

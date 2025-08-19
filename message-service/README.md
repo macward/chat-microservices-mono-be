@@ -33,7 +33,7 @@ FastAPI microservice for message processing and LLM integration within the Chara
    python run_dev.py
    ```
 
-The service will be available at http://localhost:8004
+The service will be available at http://localhost:8009
 
 ## 📋 Implementation Status
 
@@ -160,7 +160,7 @@ Key environment variables:
 ```bash
 # Service
 SERVICE_NAME=message-service
-PORT=8004
+PORT=8009
 ENVIRONMENT=development
 
 # Database

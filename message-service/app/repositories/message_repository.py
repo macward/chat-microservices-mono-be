@@ -7,7 +7,7 @@ from beanie.odm.operators.find.comparison import In
 from pymongo import DESCENDING
 
 from app.models.database import Message
-from app.models.message import MessageRole, MessageStatus
+from app.models.message import MessageRole
 from app.core.exceptions import NotFoundError, DatabaseError
 from app.core.logging import get_logger
 
@@ -46,17 +46,6 @@ class MessageRepository:
             logger.error("Failed to create message", error=str(e))
             raise DatabaseError("create_message", f"Failed to create message: {str(e)}")
 
-    async def get_message_by_id(self, message_id: str) -> Optional[Message]:
-        """Get a message by its ID."""
-        try:
-            message = await Message.find_one(Message.message_id == message_id)
-            if not message:
-                logger.warning("Message not found", message_id=message_id)
-            return message
-            
-        except Exception as e:
-            logger.error("Failed to get message", message_id=message_id, error=str(e))
-            raise DatabaseError("get_message", f"Failed to get message: {str(e)}")
 
     async def get_conversation_messages(
         self,
@@ -83,9 +72,7 @@ class MessageRepository:
             if end_date:
                 query = query & (Message.timestamps['created_at'] <= end_date)
             
-            # Add status filter
-            if not include_archived:
-                query = query & (Message.status == MessageStatus.ACTIVE.value)
+            # Add status filter - simplified since we removed status field
             
             # Execute query with pagination and sorting
             messages = await Message.find(query)\
@@ -122,8 +109,7 @@ class MessageRepository:
             if role:
                 query = query & (Message.role == role.value)
             
-            if not include_archived:
-                query = query & (Message.status == MessageStatus.ACTIVE.value)
+            # Add status filter - simplified since we removed status field
             
             count = await Message.find(query).count()
             return count
@@ -136,54 +122,7 @@ class MessageRepository:
             )
             raise DatabaseError("count_messages", f"Failed to count messages: {str(e)}")
 
-    async def update_message_metadata(
-        self,
-        message_id: str,
-        metadata: Dict[str, Any]
-    ) -> Optional[Message]:
-        """Update message custom metadata."""
-        try:
-            message = await self.get_message_by_id(message_id)
-            if not message:
-                raise NotFoundError("Message", message_id)
-            
-            # Update metadata
-            message.custom_metadata.update(metadata)
-            message.timestamps['updated_at'] = datetime.utcnow()
-            
-            await message.save()
-            logger.info("Message metadata updated", message_id=message_id)
-            return message
-            
-        except NotFoundError:
-            raise
-        except Exception as e:
-            logger.error(
-                "Failed to update message metadata",
-                message_id=message_id,
-                error=str(e)
-            )
-            raise DatabaseError("update_metadata", f"Failed to update metadata: {str(e)}")
 
-    async def archive_message(self, message_id: str) -> Optional[Message]:
-        """Archive a message (soft delete)."""
-        try:
-            message = await self.get_message_by_id(message_id)
-            if not message:
-                raise NotFoundError("Message", message_id)
-            
-            message.status = MessageStatus.ARCHIVED.value
-            message.timestamps['updated_at'] = datetime.utcnow()
-            
-            await message.save()
-            logger.info("Message archived", message_id=message_id)
-            return message
-            
-        except NotFoundError:
-            raise
-        except Exception as e:
-            logger.error("Failed to archive message", message_id=message_id, error=str(e))
-            raise DatabaseError("archive_message", f"Failed to archive message: {str(e)}")
 
     async def get_user_messages(
         self,

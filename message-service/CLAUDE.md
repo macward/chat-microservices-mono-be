@@ -25,7 +25,7 @@ This is the **Message Service** - a FastAPI-based microservice that handles mess
 - High-volume message storage with MongoDB
 
 **Architecture:**
-- **Port**: 8004
+- **Port**: 8009
 - **Database**: MongoDB with Beanie ODM
 - **Cache/Queue**: Redis
 - **Framework**: FastAPI with async/await
@@ -94,7 +94,7 @@ pip install -r requirements-workers.txt
 python -m app.main
 
 # Alternative using uvicorn directly
-uvicorn app.main:app --host 0.0.0.0 --port 8004 --reload
+uvicorn app.main:app --host 0.0.0.0 --port 8009 --reload
 ```
 
 ### Background Workers
@@ -212,7 +212,7 @@ Key configuration (copy from `.env.example`):
 ```bash
 # Service
 SERVICE_NAME=message-service
-PORT=8004
+PORT=8009
 ENVIRONMENT=development
 
 # Database
