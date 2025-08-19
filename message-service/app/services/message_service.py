@@ -28,6 +28,7 @@ class MessageService:
         self.repository = MessageRepository()
         self.llm_service = LLMService()
     
+    
     async def create_message(
         self,
         request: CreateMessageRequest,
@@ -63,16 +64,6 @@ class MessageService:
         
         return self._to_response_model(message)
     
-    async def get_message(self, message_id: str) -> MessageResponse:
-        """Get a message by ID."""
-        logger.info("Getting message", message_id=message_id)
-        
-        message = await self.repository.get_message_by_id(message_id)
-        if not message:
-            raise NotFoundError("Message", message_id)
-        
-        return self._to_response_model(message)
-    
     async def get_conversation_messages(
         self,
         conversation_id: str,
@@ -96,7 +87,7 @@ class MessageService:
         )
         
         return [self._to_response_model(msg) for msg in messages]
-    
+
     async def archive_message(self, message_id: str) -> MessageResponse:
         """Archive a message."""
         logger.info("Archiving message", message_id=message_id)
@@ -107,19 +98,6 @@ class MessageService:
         
         return self._to_response_model(message)
     
-    async def update_message_metadata(
-        self,
-        message_id: str,
-        metadata: Dict[str, Any]
-    ) -> MessageResponse:
-        """Update message metadata."""
-        logger.info("Updating message metadata", message_id=message_id)
-        
-        message = await self.repository.update_message_metadata(message_id, metadata)
-        if not message:
-            raise NotFoundError("Message", message_id)
-        
-        return self._to_response_model(message)
     
     def _sanitize_content(self, content: str) -> str:
         """Sanitize message content."""

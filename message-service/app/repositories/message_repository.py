@@ -136,34 +136,6 @@ class MessageRepository:
             )
             raise DatabaseError("count_messages", f"Failed to count messages: {str(e)}")
 
-    async def update_message_metadata(
-        self,
-        message_id: str,
-        metadata: Dict[str, Any]
-    ) -> Optional[Message]:
-        """Update message custom metadata."""
-        try:
-            message = await self.get_message_by_id(message_id)
-            if not message:
-                raise NotFoundError("Message", message_id)
-            
-            # Update metadata
-            message.custom_metadata.update(metadata)
-            message.timestamps['updated_at'] = datetime.utcnow()
-            
-            await message.save()
-            logger.info("Message metadata updated", message_id=message_id)
-            return message
-            
-        except NotFoundError:
-            raise
-        except Exception as e:
-            logger.error(
-                "Failed to update message metadata",
-                message_id=message_id,
-                error=str(e)
-            )
-            raise DatabaseError("update_metadata", f"Failed to update metadata: {str(e)}")
 
     async def archive_message(self, message_id: str) -> Optional[Message]:
         """Archive a message (soft delete)."""
