@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     auth_service_url: str = Field(env="AUTH_SERVICE_URL")
     conversation_service_url: str = Field(env="CONVERSATION_SERVICE_URL")
     characters_service_url: str = Field(env="CHARACTERS_SERVICE_URL")
-    llm_service_url: str = Field(env="LLM_SERVICE_URL")
+    llm_service_url: str = Field(default="http://localhost:8023", env="LLM_SERVICE_URL")
     
     # LLM Configuration
     default_llm_provider: str = Field(default="lmstudio", env="DEFAULT_LLM_PROVIDER")

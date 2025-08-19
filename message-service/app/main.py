@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.logging import get_logger, setup_logging
 from app.core.exceptions import MessageServiceException
 from app.database import connect_to_database, close_database_connection
-from app.api.v1.messages import router as messages_router
+from app.api.v1 import router as api_v1_router
 
 # Setup logging
 logger = setup_logging()
@@ -154,11 +154,7 @@ async def health_check():
 
 
 # Include API routers
-app.include_router(
-    messages_router,
-    prefix="/api/v1",
-    tags=["messages"]
-)
+app.include_router(api_v1_router)
 
 
 # Root endpoint

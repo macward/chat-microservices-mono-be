@@ -15,7 +15,7 @@ Un microservicio REST que proporciona acceso fácil y confiable a modelos de len
 - ✅ Health checks
 
 ### Información del Servicio
-- **URL Base**: `http://localhost:8000` (configurable)
+- **URL Base**: `http://localhost:8023` (configurable)
 - **Formato**: JSON REST API
 - **Autenticación**: Ninguna (configurable)
 - **Rate Limit**: 100 requests/minuto por IP (configurable)

@@ -118,3 +118,29 @@ class RedisError(MessageServiceException):
             code="REDIS_ERROR",
             details={"operation": operation}
         )
+
+
+class LLMError(MessageServiceException):
+    """LLM-related error."""
+    
+    def __init__(
+        self, 
+        message: str, 
+        error_code: str = "LLM_ERROR",
+        correlation_id: Optional[str] = None
+    ):
+        super().__init__(
+            message=message,
+            code=error_code,
+            details={"correlation_id": correlation_id} if correlation_id else {}
+        )
+
+
+class TimeoutError(MessageServiceException):
+    """Timeout error."""
+    
+    def __init__(self, message: str = "Operation timed out"):
+        super().__init__(
+            message=message,
+            code="TIMEOUT_ERROR"
+        )

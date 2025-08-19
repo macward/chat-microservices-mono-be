@@ -3,7 +3,10 @@
     "allow": [
       "Bash(mkdir:*)",
       "Bash(chmod:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(kill:*)",
+      "Bash(source:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []
